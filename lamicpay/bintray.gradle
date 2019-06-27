@@ -20,12 +20,12 @@ bintray {
         websiteUrl  = siteUrl
         vcsUrl      = gitUrl
         licenses    = ['MIT']           //不能随便写，只能是仓库创建时选择的license type
-        userOrg     = 'fanlibrary'      //自己创建的organization名称
+        userOrg     = 'hltx'            //自己创建的organization名称
         publish     = true              //是否是公开项目，公开别人可以引用
 
         version {
             name        = '1.0.0'
-            desc        = 'library for input code'//描述，自己定义
+            desc        = 'library for lamic sdk'//描述，自己定义
             released    = new Date()
             vcsTag      = 'v1.0.0'
             attributes  = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
