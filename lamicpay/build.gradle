@@ -31,6 +31,8 @@ dependencies {
 
 }
 
+apply from: 'bintray.gradle'
+
 task makeJar(type: Copy) {
     //删除存在的
     delete 'build/libs/lamicsdk-1.0.0.jar'

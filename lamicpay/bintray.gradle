@@ -2,8 +2,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 
-def siteUrl = 'https://github.com/Fan-cn/InputCode-master'       // 项目的主页
-def gitUrl  = 'https://github.com/Fan-cn/InputCode-master.git'   // Git仓库的url
+def siteUrl = 'https://github.com/Fan-cn/LamicSdk'       // 项目的主页
+def gitUrl  = 'https://github.com/Fan-cn/LamicSdk.git'   // Git仓库的url
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
@@ -27,7 +27,7 @@ bintray {
             name        = '1.0.0'
             desc        = 'library for input code'//描述，自己定义
             released    = new Date()
-            vcsTag      = 'v1.0.1'
+            vcsTag      = 'v1.0.0'
             attributes  = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
         }
     }
@@ -41,8 +41,8 @@ install {
             project {
                 packaging 'aar'
                 // Add your description here
-                name 'Fan Android'
-                description 'fan open library.'
+                name 'LamicSdk'
+                description 'Lamic library.'
                 url siteUrl
                 // Set your license
                 licenses {
