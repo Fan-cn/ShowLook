@@ -5,7 +5,7 @@ version = '1.0.0'      // 数据仓库依赖第三部分
 
 def siteUrl = 'https://github.com/Fan-cn/ShowLook'       // 项目的主页
 def gitUrl  = 'https://github.com/Fan-cn/ShowLook.git'   // Git仓库的url
-group = "com.hltx.lamic"       // 数据仓库依赖第一部分
+group = "com.hltx"       // 数据仓库依赖第一部分
 
 install {
     repositories.mavenInstaller {
@@ -73,7 +73,7 @@ task releaseJar(type: Copy) {
     from( 'build/intermediates/bundles/default')
     into( '../jar')
     include('classes.jar')
-    rename('classes.jar', 'lamicpay-' + version + '.jar')
+    rename('classes.jar', 'lamicpaysdk-' + version + '.jar')
 }
 
 Properties properties = new Properties()
@@ -84,7 +84,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "LamicPaySDK"
-        name = "lamicsdk"             // 数据仓库依赖第二部分
+        name = "lamicpaysdk"             // 数据仓库依赖第二部分
         userOrg ='fanlibrary'
         websiteUrl = siteUrl
         vcsUrl = gitUrl

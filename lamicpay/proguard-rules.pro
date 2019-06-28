@@ -121,5 +121,6 @@
 -keepclassmembers class com.hltx.lamic.lamicpay.utils.Debug {
     public *;
 }
--dontwarn class com.hltx.lamic.lamicpay.net.**
+
 -keep class com.hltx.lamic.lamicpay.net.**{*;}
+#-dontwarn class com.hltx.lamic.lamicpay.net.**

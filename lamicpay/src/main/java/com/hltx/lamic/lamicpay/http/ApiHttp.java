@@ -1,15 +1,16 @@
 package com.hltx.lamic.lamicpay.http;
 
-import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.HttpHeaders;
-import com.lzy.okgo.model.HttpParams;
-import com.lzy.okgo.model.Response;
+
+import com.hltx.lamic.lamicpay.net.callback.StringCallback;
+import com.hltx.lamic.lamicpay.net.model.HttpHeaders;
+import com.hltx.lamic.lamicpay.net.model.HttpParams;
+import com.hltx.lamic.lamicpay.net.model.Response;
 
 import java.util.Map;
 
 public class ApiHttp extends ApiRequest{
-    private HttpHeaders     headers     = new HttpHeaders();
-    private HttpParams      params      = new HttpParams();
+    private HttpHeaders headers     = new HttpHeaders();
+    private HttpParams params      = new HttpParams();
     private ApiCallback     callback;
 
     public void putHeader(String key, String val){
