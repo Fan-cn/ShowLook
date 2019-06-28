@@ -11,17 +11,15 @@ import com.hltx.lamic.lamicpay.bean.HttpResponseModel;
 import com.hltx.lamic.lamicpay.http.ApiCallback;
 import com.hltx.lamic.lamicpay.http.ApiHttp;
 import com.hltx.lamic.lamicpay.http.LamicApiCallBack;
+import com.hltx.lamic.lamicpay.net.OkNet;
+import com.hltx.lamic.lamicpay.net.cookie.CookieJarImpl;
+import com.hltx.lamic.lamicpay.net.cookie.store.MemoryCookieStore;
+import com.hltx.lamic.lamicpay.net.interceptor.HttpLoggingInterceptor;
+import com.hltx.lamic.lamicpay.net.utils.HttpUtils;
 import com.hltx.lamic.lamicpay.utils.Debug;
 import com.hltx.lamic.lamicpay.utils.DesUtil;
 import com.hltx.lamic.lamicpay.utils.DesUtils4CSharp;
 import com.hltx.lamic.lamicpay.utils.SignUtils;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.cache.CacheEntity;
-import com.lzy.okgo.cache.CacheMode;
-import com.lzy.okgo.cookie.CookieJarImpl;
-import com.lzy.okgo.cookie.store.MemoryCookieStore;
-import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
-import com.lzy.okgo.utils.HttpUtils;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -38,22 +36,40 @@ import okhttp3.OkHttpClient;
  */
 public class LamicPay {
 
-    public static final String      TAG                 = "LamicSDK";       //日志标识
-    public static final boolean     isLoggable          = true;             //是否打印日志
-    public static final int         DEF_MILLISECONDS    = 15000;            //默认超时时间 毫秒
+    /**
+     * 日志标识
+     */
+    public static final String      TAG                 = "LamicSDK";
+    /**
+     * 是否打印日志
+     */
+    public static boolean           isLoggable          = true;
+    /**
+     * 默认超时时间 毫秒
+     */
+    public static long              DEF_MILLISECONDS    = 15000;
+    /**
+     * 莱米UID
+     */
     public static String            UID;
+    /**
+     * 私钥
+     */
     public static String            PRIVATE_KEY;
 //    public static String            UID = "22222222222";
 //    public static String            PRIVATE_KEY = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAM3NjLXb5w5RBRXau1Ud/ORcGnyOk3vGoL6FBQOfdKlD1JFftabexrJg7E/jXkR3KfGDnAtzoKct/ckpvxiVboK7he2Gxn+DavBlREJinSVUCda60sph2w889b5ns8hudqIsrb2/fxdkPxEAboE7YSBok/QpwtndOpkippdMLccnAgMBAAECgYAQ4cupH2DUy9Ce+lJjqRIVqXiCvy9Z9/E3r7G5mlr3h5joU/GSvrON7mV0KDKTazMFnMYwKkwDasJmvgXu/lMSQKQucSyzm7bMAlgEAX4D8eAeNJIt9/v1sZ5Bg3/0jZNuk/PHiFxjOD+0yBrXtCwLmUzpJixagQmvrPSPN4J4AQJBAOt6mHCuhIZK+4mhQnKuZv8UgQErIFQGpP2hzjI6ewZreL1uSUVmJVp2c0g2MQrXFPCc92wTkr4x0laPVYUIJk0CQQDfvOZa5XeKV/g7ce98Bt2TPbZDipdIyRjWwkPvTwOehT/wqNAW3PcmmMHrSRWR4m/JFVjI2emH+kQx/AK6HUVDAkBl43z0PL8A8I7YJVuADbBpLLEJFWT+loVrbUiv+RfkVjo/FOpFSgZdlyUYmMIto5Te67wvGmUDQMF3TLu/PSB9AkBLxnpuBpF59VlJKMlnRBv/JkN4lJOwPwt+kMTZY/Vh1tdU9pejZqr+E3Z57YK0qfAaNnSfcc46E3TNSQDTb95pAkEAsReDNCCcsDW5VbHCmUpyta86+LDilbuDYmblx/gSqfsuGEDmqo7eWk+idrPt980wvhs88XGSBV1/hJ0aPRo38g==";
 
     private static LamicPay         instance;
-    private Application             mApp;                                   //全局Application
+
+    /**
+     * 全局Application
+     */
+    private Application             mApp;
 
 
     public LamicPay(){
 
     }
-
 
     public static LamicPay getInstance() {
         if (instance == null) {
@@ -71,7 +87,7 @@ public class LamicPay {
      * @param application   全局Application
      * @param uid           莱米UID
      */
-    public void init(Application application, String uid){
+    public LamicPay init(Application application, String uid){
         HttpUtils.checkNotNull(application, "请调用初始化接口 LamicPay.getInstance().init()，在自定义的Application中!");
         HttpUtils.checkNotNull(uid,"请在init或changeAccount接口中传入uid!");
 
@@ -80,16 +96,16 @@ public class LamicPay {
 
         initHttp();
         getCrt();
+
+        return instance;
     }
 
     /**
-     * 账号信息 发生变更
-     * @param uid   莱米UID
+     * 统一接口请求
+     * @param method    接口{@link MethodConfig}
+     * @param params    参数
+     * @param callBack  回调
      */
-    public void changeAccount(String uid){
-        UID = uid;
-    }
-
     public void invoke(String method, Map<String, Object> params, final LamicApiCallBack callBack){
 
         checkInit();
@@ -127,7 +143,9 @@ public class LamicPay {
         });
     }
 
-
+    /**
+     * 私钥获取
+     */
     private void getCrt(){
         ApiHttp apiHttp = new ApiHttp();
         String encrypt = DesUtil.encrypt(UID);
@@ -169,25 +187,50 @@ public class LamicPay {
         builder.writeTimeout(DEF_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.connectTimeout(DEF_MILLISECONDS, TimeUnit.MILLISECONDS);
 
-        OkGo.getInstance().init(mApp)
-                .setOkHttpClient(builder.build())               //建议设置OkHttpClient，不设置将使用默认的
-                .setCacheMode(CacheMode.NO_CACHE)               //全局统一缓存模式，默认不使用缓存，可以不传
-                .setCacheTime(CacheEntity.CACHE_NEVER_EXPIRE)   //全局统一缓存时间，默认永不过期，可以不传
-                .setRetryCount(0)                               //全局统一超时重连次数，默认为三次，那么最差的情况会请求4次(一次原始请求，三次重连请求)，不需要可以设置为0
-        ;
+        OkNet.getInstance().init(mApp).setOkHttpClient(builder.build());
     }
+
+
+    /**
+     * 账号信息 发生变更
+     * @param uid   莱米UID
+     */
+    public void changeAccount(String uid){
+        UID = uid;
+    }
+
 
     /**
      * 取消所有网络请求
      */
     public void cancelAllHttp(){
         checkInit();
-        OkGo.getInstance().cancelAll();
+        OkNet.getInstance().cancelAll();
     }
 
+    /**
+     * 是否打印日志
+     * @param loggable  boolean {@link LamicPay#isLoggable 默认值}
+     */
+    public LamicPay setIsLoggable(boolean loggable){
+        isLoggable = loggable;
+        return instance;
+    }
 
+    /**
+     * 连接超时时间设置
+     * @param milliseconds 毫秒 {@link LamicPay#DEF_MILLISECONDS 默认值}
+     */
+    public LamicPay setConnTimeout(long milliseconds){
+        DEF_MILLISECONDS = milliseconds;
+        return instance;
+    }
+
+    /**
+     * 判断是否为空
+     */
     private void checkInit(){
-        HttpUtils.checkNotNull(mApp, "请调用初始化接口 LamicPay.getInstance().init()，在自定义的Application中!");
+        HttpUtils.checkNotNull(mApp, "必须调用初始化接口 LamicPay.getInstance().init()，在自定义的Application中!");
         HttpUtils.checkNotNull(UID,"请在init或changeAccount接口中传入uid!");
     }
 }

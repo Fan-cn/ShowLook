@@ -28,7 +28,7 @@ public class ApiHttp extends ApiRequest{
 
     /**
      *   Activity销毁时，取消网络请求
-     *   OkGo.getInstance().cancelTag(tag);
+     *   OkNet.getInstance().cancelTag(tag);
      *
      * @param url 地址
      * @param cb 回调

@@ -1,253 +1,97 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in /Users/fan/Library/Android/sdk/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
-
-# Add any project specific keep options here:
-
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
-
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
-
-
-#1.基本指令区
-# 代码混淆压缩比，在0~7之间，默认为5，一般不做修改
--optimizationpasses 5
-# 混合时不使用大小写混合，混合后的类名为小写
+# 表示混淆时不使用大小写混合类名
 -dontusemixedcaseclassnames
-# 指定不去忽略非公共库的类
+# 表示不跳过library中的非public的类
 -dontskipnonpubliclibraryclasses
-# 指定不去忽略非公共库的类成员
--dontskipnonpubliclibraryclassmembers
-# 不做预校验，preverify是proguard的四个步骤之一，Android不需要preverify，去掉这一步能够加快混淆速度。
--dontpreverify
-#-verbose
-#-ignorewarning
--printmapping proguardMapping.txt
-# 指定混淆是采用的算法，后面的参数是一个过滤器
-# 这个过滤器是谷歌推荐的算法，一般不做更改
--optimizations !code/simplification/cast,!field/*,!class/merging/*
-# 保留Annotation不混淆
--keepattributes *Annotation*,InnerClasses
-# 避免混淆泛型
--keepattributes Signature
-# 抛出异常时保留代码行号
--keepattributes SourceFile,LineNumberTable
+# 打印混淆的详细信息
+-verbose
 
-#2.默认保留区
-# 保留我们使用的四大组件，自定义的Application等等这些类不被混淆
-# 因为这些子类都有可能被外部调用
--keep public class * extends android.app.Activity
--keep public class * extends android.app.Application
--keep public class * extends android.app.Service
--keep public class * extends android.content.BroadcastReceiver
--keep public class * extends android.content.ContentProvider
--keep public class * extends android.app.backup.BackupAgentHelper
--keep public class * extends android.preference.Preference
--keep public class * extends android.view.View
+# Optimization is turned off by default. Dex does not like code run
+# through the ProGuard optimize and preverify steps (and performs some
+# of these optimizations on its own).
+-dontoptimize
+# 表示不进行校验,这个校验作用 在java平台上的
+-dontpreverify
+# Note that if you want to enable optimization, you cannot just
+# include optimization flags in your own project configuration file;
+# instead you will need to point to the
+# "proguard-android-optimize.txt" file instead of this one from your
+# project.properties file.
+
+-keepattributes *Annotation*
+-keep public class com.google.vending.licensing.ILicensingService
 -keep public class com.android.vending.licensing.ILicensingService
-# 保留support下的所有类及其内部类
--keep class android.support.**{*;}
-# 保留本地native方法不被混淆
+
+# For native methods, see http://proguard.sourceforge.net/manual/examples.html#native
 -keepclasseswithmembernames class * {
     native <methods>;
 }
-# 保留继承的
--keep public class * extends android.support.v4.**
--keep public class * extends android.support.v7.**
--keep public class * extends android.support.annotation.**
--keep public class * extends androidx.**
-# 保留在Activity中的方法参数是view的方法，
-# 这样以来我们在layout中写的onClick就不会被影响
--keepclassmembers class * extends android.app.Activity{
-    public void *(android.view.View);
+
+# keep setters in Views so that animations can still work.
+# see http://proguard.sourceforge.net/manual/examples.html#beans
+-keepclassmembers public class * extends android.view.View {
+   void set*(***);
+   *** get*();
 }
-# 保留枚举类不被混淆
+
+# We want to keep methods in Activity that could be used in the XML attribute onClick
+-keepclassmembers class * extends android.app.Activity {
+   public void *(android.view.View);
+}
+
+# For enumeration classes, see http://proguard.sourceforge.net/manual/examples.html#enumerations
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
-# 保留我们自定义控件（继承自View）不被混淆
--keep public class * extends android.view.View{
-    *** get*();
-    void set*(***);
-    public <init>(android.content.Context);
-    public <init>(android.content.Context, android.util.AttributeSet);
-    public <init>(android.content.Context, android.util.AttributeSet, int);
-}
-# 保留Parcelable序列化类不被混淆
--keep class * implements android.os.Parcelable {
-  public static final android.os.Parcelable$Creator *;
-}
-# 保留Serializable序列化的类不被混淆
--keepclassmembers class * implements java.io.Serializable {
-    static final long serialVersionUID;
-    private static final java.io.ObjectStreamField[] serialPersistentFields;
-    private void writeObject(java.io.ObjectOutputStream);
-    private void readObject(java.io.ObjectInputStream);
-    java.lang.Object writeReplace();
-    java.lang.Object readResolve();
-}
-# 对于带有回调函数的onXXEvent、**On*Listener的，不能被混淆
--keepclassmembers class * {
-    void *(**On*Event);
-    void *(**On*Listener);
-}
-# 保留R下面的资源
--keep class **.R$* {*;}
--keepclassmembers class * {
-    void *(**On*Event);
+
+-keepclassmembers class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator CREATOR;
 }
 
-#3.webview
--keepclassmembers class fqcn.of.javascript.interface.for.webview {
-   public *;
+-keepclassmembers class **.R$* {
+    public static <fields>;
 }
--keepclassmembers class * extends android.webkit.webViewClient {
-    public void *(android.webkit.WebView, java.lang.String, android.graphics.Bitmap);
-    public boolean *(android.webkit.WebView, java.lang.String);
+
+# The support library contains references to newer platform versions.
+# Don't warn about those in case this app is linking against an older
+# platform version.  We know about them, and they are safe.
+-dontwarn android.support.**
+
+# Understand the @Keep support annotation.
+-keep class android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class * {*;}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep <methods>;
 }
--keepclassmembers class * extends android.webkit.webViewClient {
-    public void *(android.webkit.webView, jav.lang.String);
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep <init>(...);
 }
 
 
 
 
-
-
-#RxJava RxAndroid
--dontwarn sun.misc.**
--keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
-   long producerIndex;
-   long consumerIndex;
-}
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode producerNode;
-}
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode consumerNode;
-}
--dontwarn rx.**
--keepclassmembers class rx.** { *; }
-
-#okhttp
--dontwarn okhttp3.**
--keep class okhttp3.**{*;}
-
-#okio
--dontwarn okio.**
--keep class okio.**{*;}
-
-#Glide
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
-  **[] $VALUES;
-  public *;
-}
+#忽略警告
+-ignorewarnings
+#保证是独立的jar,没有任何项目引用,如果不写就会认为我们所有的代码是无用的,从而把所有的代码压缩掉,导出一个空的jar
+-dontshrink
+#保护泛型
+-keepattributes Signature
 
 #Gson
 #-keepattributes Signature-keepattributes *Annotation*
 -keep class sun.misc.Unsafe { *; }
 -keep class com.google.gson.stream.** { *; }
 # Application classes that will be serialized/deserialized over Gson 下面替换成自己的实体类
--keep class com.hltx.lamic.chahandproj.bean.** { *; }
+-keep class com.hltx.lamic.lamicpay.bean.** { *; }
 
 
-# 微信支付
-#-dontwarn com.tencent.mm.**
-#-dontwarn com.tencent.wxop.stat.**
-#-keep class com.tencent.mm.** {*;}
-#-keep class com.tencent.wxop.stat.**{*;}
-
-# 支付宝钱包
--dontwarn com.alipay.**
--dontwarn HttpUtils.HttpFetcher
--dontwarn com.ta.utdid2.**
--dontwarn com.ut.device.**
--keep class com.alipay.android.app.IAlixPay{*;}
--keep class com.alipay.android.app.IAlixPay$Stub{*;}
--keep class com.alipay.android.app.IRemoteServiceCallback{*;}
--keep class com.alipay.android.app.IRemoteServiceCallback$Stub{*;}
--keep class com.alipay.sdk.app.PayTask{ public *;}
--keep class com.alipay.sdk.app.AuthTask{ public *;}
--keep class com.alipay.mobilesecuritysdk.*
--keep class com.ut.*
-
-#-dontwarn java.beans.**
-#-dontwarn java.nio.**
-#-keep class java.beans.**
-#-keep class java.nio.**
-
--keepclassmembers class com.myapp.models.** { *; }
--keep class com.fasterxml.jackson.annotation.** { *; }
--dontwarn com.fasterxml.jackson.databind.**
--dontwarn org.springframework.**
-
-#Butterknife
--keep class butterknife.** { *; }
--dontwarn butterknife.internal.**
--keep class **$$ViewBinder { *; }
--keepclasseswithmembernames class * {
-   @butterknife.* <fields>;
-}
--keepclasseswithmembernames class * {
-   @butterknife.* <methods>;
-}
-
--keep class com.luck.picture.lib.rxbus2.** { *; }
-
-#腾讯Bugly
--dontwarn com.tencent.bugly.**
--keep public class com.tencent.bugly.**{*;}
-# tinker混淆规则
--dontwarn com.tencent.tinker.**
--keep class com.tencent.tinker.** { *; }
-
-
-
-
-
-
-
-# linkkit API   阿里IOT
--keep class com.aliyun.alink.**{*;}
--keep class com.aliyun.linksdk.**{*;}
--dontwarn com.aliyun.**
--dontwarn com.alibaba.**
--dontwarn com.alipay.**
--dontwarn com.ut.**
-# keep native method
--keepclasseswithmembernames class * {
-    native <methods>;
-}
-# keep netty
-#-keepattributes Signature,InnerClasses
-#-keepclasseswithmembers class io.netty.** {
-#    *;
-#}
-#-dontwarn io.netty.**
-#-dontwarn sun.**
-# keep mqtt
--keep public class org.eclipse.paho.**{*;}
-# keep fastjson
--dontwarn com.alibaba.fastjson.**
--keep class com.alibaba.fastjson.**{*;}
 # keep gson
 -keep class com.google.gson.** { *;}
 # keep network core
@@ -260,28 +104,22 @@
 -keep class okhttp3.**{*;}
 -keep class org.apache.commons.codec.**{*;}
 
-#agent web
--keep class com.just.agentweb.** {
-    *;
-}
--dontwarn com.just.agentweb.**
--keepclassmembers class com.just.agentweb.sample.common.AndroidInterface{ *; }
 
 
-#BaseRecyclerViewAdapterHelper
--keep class com.chad.library.adapter.** {
-*;
-}
--keep public class * extends com.chad.library.adapter.base.BaseQuickAdapter
--keep public class * extends com.chad.library.adapter.base.BaseViewHolder
--keepclassmembers  class **$** extends com.chad.library.adapter.base.BaseViewHolder {
-     <init>(...);
-}
+# 不混淆某个类（使用者可以看到类名）
+-keep class com.hltx.lamic.lamicpay.LamicPay
+-keep class com.hltx.lamic.lamicpay.http.LamicApiCallBack
+-keep class com.hltx.lamic.lamicpay.utils.Debug
 
--dontwarn org.jboss.**
--dontwarn io.netty.**
--dontwarn org.apache.**
--dontwarn org.mozilla.**
--dontwarn org.codehaus.**
--keep class com.luck.picture.lib.**{*;}
--keep class com.hltx.lamic.chahandproj.ui.**{*;}
+# 不混淆某个类中以 public 开始的方法（使用者可以看到该方法）
+-keepclassmembers class com.hltx.lamic.lamicpay.LamicPay {
+    public *;
+}
+-keepclassmembers class com.hltx.lamic.lamicpay.http.LamicApiCallBack {
+    public *;
+}
+-keepclassmembers class com.hltx.lamic.lamicpay.utils.Debug {
+    public *;
+}
+-dontwarn class com.hltx.lamic.lamicpay.net.**
+-keep class com.hltx.lamic.lamicpay.net.**{*;}

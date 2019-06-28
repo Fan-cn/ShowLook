@@ -1,1 +1,2 @@
-include ':lamicdemo', ':lamicpay'
+include ':lamicdemo'
+include ':lamicpay'
