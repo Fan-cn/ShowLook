@@ -115,9 +115,6 @@ public class DesUtils4CSharp {
     /**
      * 二进制转字符串
      *
-     * @param b
-     *
-     * @return
      */
     public static String byte2hex(byte[] b) {
         String hs = "";
