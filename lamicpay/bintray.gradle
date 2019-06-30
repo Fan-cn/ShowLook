@@ -5,7 +5,7 @@ version = '1.0.0'      // 数据仓库依赖第三部分
 
 def siteUrl = 'https://github.com/Fan-cn/ShowLook'       // 项目的主页
 def gitUrl  = 'https://github.com/Fan-cn/ShowLook.git'   // Git仓库的url
-group = "com.hltx"       // 数据仓库依赖第一部分
+group = "com.hltx.lamic"       // 数据仓库依赖第一部分
 
 install {
     repositories.mavenInstaller {
@@ -84,7 +84,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "LamicPaySDK"
-        name = "lamicpaysdk"             // 数据仓库依赖第二部分
+        name = "LamicSdk"             // 数据仓库依赖第二部分
         userOrg ='fanlibrary'
         websiteUrl = siteUrl
         vcsUrl = gitUrl
