@@ -73,7 +73,7 @@ task releaseJar(type: Copy) {
     from( 'build/intermediates/bundles/default')
     into( '../jar')
     include('classes.jar')
-    rename('classes.jar', 'lamicpaysdk-' + version + '.jar')
+    rename('classes.jar', 'paysdk-' + version + '.jar')
 }
 
 Properties properties = new Properties()
@@ -83,9 +83,9 @@ bintray {
     key = properties.getProperty("bintray.apikey")
     configurations = ['archives']
     pkg {
-        repo = "LamicPaySDK"
-        name = "LamicSdk"             // 数据仓库依赖第二部分
         userOrg ='fanlibrary'
+        repo = "LamicPaySDK"
+        name = "LamicPaySDK"             // 数据仓库依赖第二部分
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
