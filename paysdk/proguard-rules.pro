@@ -89,7 +89,7 @@
 -keep class sun.misc.Unsafe { *; }
 -keep class com.google.gson.stream.** { *; }
 # Application classes that will be serialized/deserialized over Gson 下面替换成自己的实体类
--keep class com.hltx.lamic.paysdk.bean.** { *; }
+-keep class com.hltx.lamic.lamicpay.bean.** { *; }
 
 
 # keep gson
@@ -107,20 +107,20 @@
 
 
 # 不混淆某个类（使用者可以看到类名）
--keep class com.hltx.lamic.paysdk.LamicPay
--keep class com.hltx.lamic.paysdk.http.LamicApiCallBack
--keep class com.hltx.lamic.paysdk.utils.Debug
+-keep class com.hltx.lamic.lamicpay.LamicPay
+-keep class com.hltx.lamic.lamicpay.http.LamicApiCallBack
+-keep class com.hltx.lamic.lamicpay.utils.Debug
 
 # 不混淆某个类中以 public 开始的方法（使用者可以看到该方法）
--keepclassmembers class com.hltx.lamic.paysdk.LamicPay {
+-keepclassmembers class com.hltx.lamic.lamicpay.LamicPay {
     public *;
 }
--keepclassmembers class com.hltx.lamic.paysdk.http.LamicApiCallBack {
+-keepclassmembers class com.hltx.lamic.lamicpay.http.LamicApiCallBack {
     public *;
 }
--keepclassmembers class com.hltx.lamic.paysdk.utils.Debug {
+-keepclassmembers class com.hltx.lamic.lamicpay.utils.Debug {
     public *;
 }
 
--keep class com.hltx.lamic.paysdk.net.**{*;}
-#-dontwarn class com.hltx.lamic.paysdk.net.**
+-keep class com.hltx.lamic.lamicpay.net.**{*;}
+#-dontwarn class com.hltx.lamic.lamicpay.net.**
