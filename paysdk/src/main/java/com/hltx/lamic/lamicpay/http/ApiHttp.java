@@ -1,6 +1,5 @@
 package com.hltx.lamic.lamicpay.http;
 
-
 import com.hltx.lamic.lamicpay.net.callback.StringCallback;
 import com.hltx.lamic.lamicpay.net.model.HttpHeaders;
 import com.hltx.lamic.lamicpay.net.model.HttpParams;
