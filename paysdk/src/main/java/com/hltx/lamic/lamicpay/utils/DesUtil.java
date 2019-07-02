@@ -210,11 +210,15 @@ public class DesUtil {
 
     }
 
-
+//
 //    public static void main(String[] args){
 //
 //        System.out.println(encrypt("22222222222"));
-//        System.out.println(decrypt("3FB3BBAFDA7AC830A15728E18248F74C"));
+//        String string = "signType=RSA&uid=22222222222<reqtime>20190702162458&vip_card_no=15708416715";
+//
+//        System.out.println(md5(string));
+//        System.out.println(md5code("123"));
+//
 //    }
 
 }

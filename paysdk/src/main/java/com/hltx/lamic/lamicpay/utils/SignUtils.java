@@ -35,7 +35,7 @@ public class SignUtils {
     private static String sign(Map<String, Object> sPara) {
         String prestr = createLinkString(sPara);
         String md5Str = prestr.substring(0, prestr.length() - 1);
-        String md5 = DesUtil.md5code(md5Str).toLowerCase();
+        String md5 = DesUtil.md5(md5Str);
         return buildRsaSign(md5, LamicPay.PRIVATE_KEY);
     }
 
