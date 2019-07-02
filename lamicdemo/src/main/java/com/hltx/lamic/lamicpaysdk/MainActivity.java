@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void query(View view) {
         Map<String, Object> params = new HashMap<>();
-        params.put("out_trade_no", "999372131285");
+        params.put("out_trade_no", "99937213128");
         LamicPay.getInstance().invoke(MethodConfig.TRADE_QUERY, params, new LamicApiCallBack() {
             @Override
             public void callBack(String json) {

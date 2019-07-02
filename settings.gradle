@@ -1,2 +1,1 @@
-include ':lamicdemo'
-include ':paysdk'
+include ':lamicdemo','paysdk'

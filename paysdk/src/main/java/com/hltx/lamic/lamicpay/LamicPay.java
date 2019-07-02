@@ -109,7 +109,7 @@ public class LamicPay {
     public void invoke(String method, Map<String, Object> params, final LamicApiCallBack callBack){
 
         checkInit();
-        HttpUtils.checkNotNull(method, "请传入method参数(如ApiConfig.TRADE_CREATE)");
+        HttpUtils.checkNotNull(method, "请传入method参数(如MethodConfig.TRADE_CREATE)");
         HttpUtils.checkNotNull(params, "请传入参数");
 
         ApiHttp apiHttp = new ApiHttp();
