@@ -56,6 +56,15 @@ public class MethodConfig {
 //     */
 //    public static final String TRADE_CREATE_PAY_TYPE    = "";
 
+    /**
+     * 刷脸初始化
+     */
+    public static final String TRADE_FACE_INIT          = "port/pay/faceInit";
+    /**
+     * 刷脸支付
+     */
+    public static final String TRADE_FACE_SCAN          = "port/pay/smartScan";
+
 
 
     /**
