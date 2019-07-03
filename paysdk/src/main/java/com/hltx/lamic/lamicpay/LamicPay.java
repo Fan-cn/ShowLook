@@ -11,15 +11,15 @@ import com.hltx.lamic.lamicpay.bean.HttpResponseModel;
 import com.hltx.lamic.lamicpay.http.ApiCallback;
 import com.hltx.lamic.lamicpay.http.ApiHttp;
 import com.hltx.lamic.lamicpay.http.LamicApiCallBack;
-import com.hltx.lamic.lamicpay.net.OkNet;
-import com.hltx.lamic.lamicpay.net.cookie.CookieJarImpl;
-import com.hltx.lamic.lamicpay.net.cookie.store.MemoryCookieStore;
-import com.hltx.lamic.lamicpay.net.interceptor.HttpLoggingInterceptor;
-import com.hltx.lamic.lamicpay.net.utils.HttpUtils;
 import com.hltx.lamic.lamicpay.utils.Debug;
 import com.hltx.lamic.lamicpay.utils.DesUtil;
 import com.hltx.lamic.lamicpay.utils.DesUtils4CSharp;
 import com.hltx.lamic.lamicpay.utils.SignUtils;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cookie.CookieJarImpl;
+import com.lzy.okgo.cookie.store.MemoryCookieStore;
+import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
+import com.lzy.okgo.utils.HttpUtils;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -173,7 +173,7 @@ public class LamicPay {
     /**
      * 初始化网络请求
      */
-    private void initHttp() {
+    private void initHttp(long... args) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(TAG);
         loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);
@@ -183,11 +183,18 @@ public class LamicPay {
         //使用内存保持cookie，app退出后，cookie消失
         builder.cookieJar(new CookieJarImpl(new MemoryCookieStore()));
 
+        if (args.length > 0){
+            DEF_MILLISECONDS = args[0];
+        }
         builder.readTimeout(DEF_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.writeTimeout(DEF_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.connectTimeout(DEF_MILLISECONDS, TimeUnit.MILLISECONDS);
 
-        OkNet.getInstance().init(mApp).setOkHttpClient(builder.build());
+        if (args.length > 0){
+            OkGo.getInstance().setOkHttpClient(builder.build());
+        }else {
+            OkGo.getInstance().init(mApp).setOkHttpClient(builder.build());
+        }
     }
 
 
@@ -205,7 +212,7 @@ public class LamicPay {
      */
     public void cancelAllHttp(){
         checkInit();
-        OkNet.getInstance().cancelAll();
+        OkGo.getInstance().cancelAll();
     }
 
     /**
@@ -222,7 +229,7 @@ public class LamicPay {
      * @param milliseconds 毫秒 {@link LamicPay#DEF_MILLISECONDS 默认值}
      */
     public LamicPay setConnTimeout(long milliseconds){
-        DEF_MILLISECONDS = milliseconds;
+        initHttp(milliseconds);
         return instance;
     }
 
