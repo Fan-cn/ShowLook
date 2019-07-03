@@ -64,6 +64,10 @@ public class MethodConfig {
      * 刷脸支付
      */
     public static final String TRADE_FACE_SCAN          = "port/pay/smartScan";
+    /**
+     * 刷脸支付结果查询
+     */
+    public static final String TRADE_FACE_QUERY         = "port/pay/mverify";
 
 
 

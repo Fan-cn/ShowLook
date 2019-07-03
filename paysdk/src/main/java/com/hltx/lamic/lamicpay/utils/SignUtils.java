@@ -84,6 +84,7 @@ public class SignUtils {
         reqMap.put("signType", "RSA");
         reqMap.put("uid", String.format("%s<reqtime>%s", LamicPay.UID, dateFormat()));
         reqMap.put("sign", sign(reqMap));
+        Debug.i("请求参数------->"+reqMap.toString());
         return reqMap;
     }
 
