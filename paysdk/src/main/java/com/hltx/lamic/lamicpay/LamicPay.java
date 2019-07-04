@@ -3,6 +3,7 @@ package com.hltx.lamic.lamicpay;
 import android.app.Application;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hltx.lamic.lamicpay.bean.MethodConfig;
 import com.hltx.lamic.lamicpay.bean.BaseModel;
 import com.hltx.lamic.lamicpay.bean.CrtModel;
@@ -124,6 +125,18 @@ public class LamicPay {
                 if (model.getErrorCode().equals(MethodConfig.HTTP_SUCCESS)){
                     httpModel.setCode(HttpResponseModel.RESPONSE_SUCCESS);
                     httpModel.setMsg(json);
+                    Map<String, Object> data = GsonToMaps(json);
+                    if (data.containsKey("resultMsg")){
+                        String resultMsg = (String) data.get("resultMsg");
+                        try {
+                            Map<String, Object> map = GsonToMaps(resultMsg);
+                            data.put("resultMsg", map);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Debug.i(e.getMessage()+":"+resultMsg);
+                        }
+                    }
+                    httpModel.setData(data);
                 }else {
                     httpModel.setCode(HttpResponseModel.RESPONSE_SERVER_ERROR);
                     httpModel.setMsg(HttpResponseModel.RESPONSE_SERVER_ERROR_MSG);
@@ -239,5 +252,16 @@ public class LamicPay {
     private void checkInit(){
         HttpUtils.checkNotNull(mApp, "必须调用初始化接口 LamicPay.getInstance().init()，在自定义的Application中!");
         HttpUtils.checkNotNull(UID,"请在init或changeAccount接口中传入uid!");
+    }
+
+    /**
+     * string转map
+     */
+    public <T> Map<String, T> GsonToMaps(String gsonString) {
+        Map<String, T> map;
+        Gson gson = new Gson();
+        map = gson.fromJson(gsonString, new TypeToken<Map<String, T>>() {
+        }.getType());
+        return map;
     }
 }

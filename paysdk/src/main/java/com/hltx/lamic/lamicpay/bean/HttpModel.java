@@ -7,11 +7,12 @@ package com.hltx.lamic.lamicpay.bean;
  *     desc  :
  * </pre>
  */
-public class HttpModel {
+public class HttpModel<T> {
     private int code;
     private String msg;
     private String subCode;
     private String subMsg;
+    private T data;
 
     public HttpModel() {
 
@@ -59,5 +60,13 @@ public class HttpModel {
 
     public void setSubMsg(String subMsg) {
         this.subMsg = subMsg;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
     }
 }

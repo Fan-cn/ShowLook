@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void memberQuery(View view) {
         Map<String, Object> params = new HashMap<>();
-        params.put("vip_card_no", "15708416715");
+        params.put("vip_card_no", "18980489167");
         LamicPay.getInstance().invoke(MethodConfig.MEMBER_QUERY, params, new LamicApiCallBack() {
             @Override
             public void callBack(String json) {
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void memberModify(View view) {
         Map<String, Object> params = new HashMap<>();
-        params.put("amount", -20);
+        params.put("amount", +20);
         params.put("vip_card_no", "15708416715");
         LamicPay.getInstance().invoke(MethodConfig.MEMBER_MODIFY, params, new LamicApiCallBack() {
             @Override
@@ -101,13 +101,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void memberAdd(View view) {
         Map<String, Object> params = new HashMap<>();
-        params.put("tel", "15708416715");
-        params.put("credits", "100");
-        params.put("nickName", "火锅");
-        params.put("sex", "1");
-        params.put("name", "凡凡");
-        params.put("birth", "2019-06-26");
-        LamicPay.getInstance().invoke(MethodConfig.MEMBER_ADD, params, new LamicApiCallBack() {
+//        params.put("tel", "15708416715");
+//        params.put("credits", "100");
+//        params.put("nickName", "火锅");
+//        params.put("sex", "1");
+//        params.put("name", "凡凡");
+//        params.put("birth", "2019-06-26");
+//        LamicPay.getInstance().invoke(MethodConfig.MEMBER_ADD, params, new LamicApiCallBack() {
+//            @Override
+//            public void callBack(String json) {
+//                Debug.i(json);
+//                textView.setText(json);
+//            }
+//        });
+        params.put("strpayid", "201907031826129199");
+        LamicPay.getInstance().invoke(MethodConfig.TRADE_FACE_QUERY, params, new LamicApiCallBack() {
             @Override
             public void callBack(String json) {
                 Debug.i(json);
