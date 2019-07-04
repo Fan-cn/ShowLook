@@ -54,12 +54,12 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 javadoc {
     options {
-        encoding "UTF-8"
-        charSet 'UTF-8'
-        author true
-        version true
-        links "http://docs.oracle.com/javase/7/docs/api"
-        title 'Lamic sdk For Android'   // 文档标题
+        encoding    "UTF-8"
+        charSet     'UTF-8'
+        author      true
+        version     true
+        links       "http://docs.oracle.com/javase/7/docs/api"
+        title       'Lamic sdk For Android'   // 文档标题
     }
 }
 
@@ -70,8 +70,8 @@ artifacts {
 
 // 生成jar包
 task releaseJar(type: Copy) {
-    from( 'build/intermediates/bundles/default')
-    into( '../jar')
+    from( 'build/intermediates/packaged-classes/release/')
+    into( 'build/jar/')
     include('classes.jar')
     rename('classes.jar', 'paysdk-' + version + '.jar')
 }
@@ -83,12 +83,12 @@ bintray {
     key = properties.getProperty("bintray.apikey")
     configurations = ['archives']
     pkg {
-        userOrg ='fanlibrary'
-        repo = "LamicPaySDK"
-        name = "LamicPaySDK"             // 数据仓库依赖第二部分
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-        publish = true
+        userOrg     ='fanlibrary'
+        repo        = "LamicPaySDK"
+        name        = "LamicPaySDK"             // 数据仓库依赖第二部分
+        websiteUrl  = siteUrl
+        vcsUrl      = gitUrl
+        licenses    = ["Apache-2.0"]
+        publish     = true
     }
 }
