@@ -9,11 +9,11 @@ package com.hltx.lamic.lamicpay.bean;
  */
 public class MethodConfig {
     //基地址
-    private final static String HOST                    = "gateway.lamic.cn";
+//    private final static String HOST                    = "gateway.lamic.cn";
     /**
      * 测试地址
      */
-//    private final static String HOST                    = "dev-gateway.lamic.cn";
+    private final static String HOST                    = "dev-gateway.lamic.cn";
     public final static String BASE_URL                 = "https://" + HOST + "/";
 
     /**

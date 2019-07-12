@@ -125,18 +125,18 @@ public class LamicPay {
                 if (model.getErrorCode().equals(MethodConfig.HTTP_SUCCESS)){
                     httpModel.setCode(HttpResponseModel.RESPONSE_SUCCESS);
                     httpModel.setMsg(json);
-                    Map<String, Object> data = GsonToMaps(json);
-                    if (data.containsKey("resultMsg")){
-                        String resultMsg = (String) data.get("resultMsg");
-                        try {
-                            Map<String, Object> map = GsonToMaps(resultMsg);
-                            data.put("resultMsg", map);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Debug.i(e.getMessage()+":"+resultMsg);
-                        }
-                    }
-                    httpModel.setData(data);
+//                    Map<String, Object> data = GsonToMaps(json);
+//                    if (data.containsKey("resultMsg")){
+//                        String resultMsg = (String) data.get("resultMsg");
+//                        try {
+//                            Map<String, Object> map = GsonToMaps(resultMsg);
+//                            data.put("resultMsg", map);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            Debug.i(e.getMessage()+":"+resultMsg);
+//                        }
+//                    }
+//                    httpModel.setData(data);
                 }else {
                     httpModel.setCode(HttpResponseModel.RESPONSE_SERVER_ERROR);
                     httpModel.setMsg(HttpResponseModel.RESPONSE_SERVER_ERROR_MSG);
