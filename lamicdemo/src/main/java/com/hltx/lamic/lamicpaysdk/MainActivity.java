@@ -4,10 +4,16 @@ package com.hltx.lamic.lamicpaysdk;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hltx.lamic.lamicpay.LamicPay;
+import com.hltx.lamic.lamicpay.bean.BaseModel;
+import com.hltx.lamic.lamicpay.bean.HttpModel;
+import com.hltx.lamic.lamicpay.bean.HttpResponseModel;
 import com.hltx.lamic.lamicpay.bean.MethodConfig;
 import com.hltx.lamic.lamicpay.http.LamicApiCallBack;
 import com.hltx.lamic.lamicpay.utils.Debug;
@@ -89,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     public void memberModify(View view) {
         Map<String, Object> params = new HashMap<>();
         params.put("amount", +20);
-        params.put("vip_card_no", "15708416715");
+        params.put("vip_card_no", "18980489167");
         LamicPay.getInstance().invoke(MethodConfig.MEMBER_MODIFY, params, new LamicApiCallBack() {
             @Override
             public void callBack(String json) {
@@ -124,4 +130,44 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    String json = "{\"errorCode\":\"SUCCESS\",\"isResultTrue\":true,\"resultMsg\":\"{\\\"coupon_amount\\\":\\\"0.0\\\",\\\"coupon_detail_list\\\":\\\"\\\",\\\"invoice_url\\\":\\\"http://www.lamic.cn/fapiao?uid=22222222222&mpid=201907121057013068\\\",\\\"make_invoice\\\":true,\\\"mch_discount_amount\\\":\\\"0.0\\\",\\\"out_trade_no\\\":\\\"201907121057013068\\\",\\\"pay_type\\\":11,\\\"pay_type_description\\\":\\\"现金支付\\\",\\\"promotion_discount_amount\\\":\\\"0.0\\\",\\\"receipt_amount\\\":\\\"0.01\\\",\\\"total_amount\\\":\\\"0.01\\\",\\\"trade_no\\\":\\\"19071210562859803206235\\\",\\\"trade_status\\\":2,\\\"user_pay_amount\\\":\\\"0.01\\\"}\"}";
+
+    public void test(View view) {
+        BaseModel model = new Gson().fromJson(json, BaseModel.class);
+        HttpModel httpModel = new HttpModel();
+        if (model.getErrorCode().equals(MethodConfig.HTTP_SUCCESS)) {
+            httpModel.setCode(HttpResponseModel.RESPONSE_SUCCESS);
+            httpModel.setMsg(json);
+            try {
+                Map<String, Object> data = GsonToMaps(json);
+                if (data.containsKey("resultMsg")) {
+                    String resultMsg = (String) data.get("resultMsg");
+                    try {
+                        Map<String, Object> map = GsonToMaps(resultMsg);
+                        data.put("resultMsg", map);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Debug.i(e.getMessage() + ":" + resultMsg);
+                    }
+                }
+                httpModel.setData(data);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Debug.i(e.getMessage() + ":" + json);
+            }
+        }
+        Log.i("-----", new Gson().toJson(httpModel));
+    }
+
+
+    /**
+     * string转map
+     */
+    public <T> Map<String, T> GsonToMaps(String gsonString) {
+        Map<String, T> map;
+        Gson gson = new Gson();
+        map = gson.fromJson(gsonString, new TypeToken<Map<String, T>>() {
+        }.getType());
+        return map;
+    }
 }

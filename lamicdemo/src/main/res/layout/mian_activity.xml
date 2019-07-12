@@ -46,6 +46,12 @@
         android:text="会员录入"
         android:onClick="memberAdd"
         />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="test"
+        android:onClick="test"
+        />
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"

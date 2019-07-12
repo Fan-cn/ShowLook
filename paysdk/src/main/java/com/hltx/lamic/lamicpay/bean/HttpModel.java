@@ -1,5 +1,7 @@
 package com.hltx.lamic.lamicpay.bean;
 
+import java.util.Map;
+
 /**
  * <pre>
  *     author: Fan
@@ -7,12 +9,12 @@ package com.hltx.lamic.lamicpay.bean;
  *     desc  :
  * </pre>
  */
-public class HttpModel<T> {
+public class HttpModel {
     private int code;
     private String msg;
     private String subCode;
     private String subMsg;
-    private T data;
+    private Map<String, Object> data;
 
     public HttpModel() {
 
@@ -62,11 +64,11 @@ public class HttpModel<T> {
         this.subMsg = subMsg;
     }
 
-    public T getData() {
+    public Map<String, Object> getData() {
         return data;
     }
 
-    public void setData(T data) {
+    public void setData(Map<String, Object> data) {
         this.data = data;
     }
 }

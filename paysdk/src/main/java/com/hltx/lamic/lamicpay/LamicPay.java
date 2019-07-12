@@ -22,6 +22,7 @@ import com.lzy.okgo.cookie.store.MemoryCookieStore;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.utils.HttpUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -125,18 +126,23 @@ public class LamicPay {
                 if (model.getErrorCode().equals(MethodConfig.HTTP_SUCCESS)){
                     httpModel.setCode(HttpResponseModel.RESPONSE_SUCCESS);
                     httpModel.setMsg(json);
-//                    Map<String, Object> data = GsonToMaps(json);
-//                    if (data.containsKey("resultMsg")){
-//                        String resultMsg = (String) data.get("resultMsg");
-//                        try {
-//                            Map<String, Object> map = GsonToMaps(resultMsg);
-//                            data.put("resultMsg", map);
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                            Debug.i(e.getMessage()+":"+resultMsg);
-//                        }
-//                    }
-//                    httpModel.setData(data);
+                    try {
+                        Map<String, Object> data = GsonToMaps(json);
+                        if (data.containsKey("resultMsg")){
+                            String resultMsg = (String) data.get("resultMsg");
+                            try {
+                                Map<String, Object> map = GsonToMaps(resultMsg);
+                                data.put("resultMsg", map);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Debug.i(e.getMessage()+":"+resultMsg);
+                            }
+                        }
+                        httpModel.setData(data);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Debug.i(e.getMessage()+":"+json);
+                    }
                 }else {
                     httpModel.setCode(HttpResponseModel.RESPONSE_SERVER_ERROR);
                     httpModel.setMsg(HttpResponseModel.RESPONSE_SERVER_ERROR_MSG);
