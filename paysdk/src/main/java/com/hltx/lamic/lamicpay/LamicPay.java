@@ -22,7 +22,11 @@ import com.lzy.okgo.cookie.store.MemoryCookieStore;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.utils.HttpUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -126,23 +130,7 @@ public class LamicPay {
                 if (model.getErrorCode().equals(MethodConfig.HTTP_SUCCESS)){
                     httpModel.setCode(HttpResponseModel.RESPONSE_SUCCESS);
                     httpModel.setMsg(json);
-                    try {
-                        Map<String, Object> data = GsonToMaps(json);
-                        if (data.containsKey("resultMsg")){
-                            String resultMsg = (String) data.get("resultMsg");
-                            try {
-                                Map<String, Object> map = GsonToMaps(resultMsg);
-                                data.put("resultMsg", map);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Debug.i(e.getMessage()+":"+resultMsg);
-                            }
-                        }
-                        httpModel.setData(data);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Debug.i(e.getMessage()+":"+json);
-                    }
+                    httpModel = ResultToMap(json, httpModel);
                 }else {
                     httpModel.setCode(HttpResponseModel.RESPONSE_SERVER_ERROR);
                     httpModel.setMsg(HttpResponseModel.RESPONSE_SERVER_ERROR_MSG);
@@ -160,6 +148,28 @@ public class LamicPay {
                 callBack.callBack(new Gson().toJson(model));
             }
         });
+    }
+
+    HttpModel ResultToMap(String json, HttpModel httpModel) {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            if (jsonObject.has("resultMsg")) {
+                JSONObject object = new JSONObject(jsonObject.optString("resultMsg"));
+                Iterator<?> it = object.keys();
+                String key = "";
+                String val = "";
+                while (it.hasNext()) {//遍历JSONObject
+                    key = (String) it.next().toString();
+                    val = object.optString(key);
+                    map.put(key, val);
+                }
+            }
+        } catch (JSONException e) {
+            map.put("error", "数据解析失败");
+        }
+        httpModel.setData(map);
+        return httpModel;
     }
 
     /**
@@ -260,14 +270,4 @@ public class LamicPay {
         HttpUtils.checkNotNull(UID,"请在init或changeAccount接口中传入uid!");
     }
 
-    /**
-     * string转map
-     */
-    public <T> Map<String, T> GsonToMaps(String gsonString) {
-        Map<String, T> map;
-        Gson gson = new Gson();
-        map = gson.fromJson(gsonString, new TypeToken<Map<String, T>>() {
-        }.getType());
-        return map;
-    }
 }
