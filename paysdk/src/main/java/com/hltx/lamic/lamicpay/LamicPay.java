@@ -150,6 +150,9 @@ public class LamicPay {
         });
     }
 
+    /**
+     * 将JsonObject转换为Map
+     */
     HttpModel ResultToMap(String json, HttpModel httpModel) {
         HashMap<String, Object> map = new HashMap<String, Object>();
         try {
