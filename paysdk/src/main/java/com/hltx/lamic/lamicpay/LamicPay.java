@@ -3,7 +3,6 @@ package com.hltx.lamic.lamicpay;
 import android.app.Application;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hltx.lamic.lamicpay.bean.MethodConfig;
 import com.hltx.lamic.lamicpay.bean.BaseModel;
 import com.hltx.lamic.lamicpay.bean.CrtModel;
@@ -141,9 +140,9 @@ public class LamicPay {
                     }
                 } catch (Exception e) {
                     httpModel.setCode(HttpResponseModel.RESPONSE_SDK_ERROR);
-                    httpModel.setMsg(HttpResponseModel.RESPONSE_SDK_ERROR_MSG);
-                    httpModel.setSubCode(HttpResponseModel.RESPONSE_SDK_ERROR_MSG);
-                    httpModel.setSubMsg(e.getMessage()+";json-->"+json);
+                    httpModel.setMsg(e.getMessage());
+                    httpModel.setSubCode(HttpResponseModel.SDK_OTHER_EXCEPTION);
+                    httpModel.setSubMsg(json);
                 }
 
                 callBack.callBack(new Gson().toJson(httpModel));
@@ -153,7 +152,7 @@ public class LamicPay {
             public void onError(String errors) {
                 HttpModel model = new HttpModel(
                         HttpResponseModel.RESPONSE_SDK_ERROR, HttpResponseModel.RESPONSE_SDK_ERROR_MSG,
-                        HttpResponseModel.SDK_WEBEXCEPTION, HttpResponseModel.SDK_WEBEXCEPTION_MEG);
+                        HttpResponseModel.SDK_WEB_EXCEPTION, HttpResponseModel.SDK_WEB_EXCEPTION_MSG);
                 callBack.callBack(new Gson().toJson(model));
             }
         });

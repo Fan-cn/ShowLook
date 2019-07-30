@@ -25,6 +25,9 @@ public class HttpResponseModel {
     public static final int RESPONSE_SERVER_ERROR           = 400;
     public static final String RESPONSE_SERVER_ERROR_MSG    = "服务器端错误";
 
-    public static final String SDK_WEBEXCEPTION         = "SDK_WEBEXCEPTION";
-    public static final String SDK_WEBEXCEPTION_MEG     = "操作失败,网络请求失败";
+    public static final String SDK_WEB_EXCEPTION            = "SDK_WEB_EXCEPTION";
+    public static final String SDK_WEB_EXCEPTION_MSG        = "操作失败,网络请求失败";
+
+    public static final String SDK_OTHER_EXCEPTION          = "SDK_OTHER_EXCEPTION";
+    public static final String SDK_OTHER_EXCEPTION_MSG      = "操作失败,网络请求失败";
 }
