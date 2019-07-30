@@ -127,16 +127,25 @@ public class LamicPay {
                 String json = resultData.toString();
                 BaseModel model = new Gson().fromJson(json, BaseModel.class);
                 HttpModel httpModel = new HttpModel();
-                if (model.getErrorCode().equals(MethodConfig.HTTP_SUCCESS)){
-                    httpModel.setCode(HttpResponseModel.RESPONSE_SUCCESS);
-                    httpModel.setMsg(json);
-                    httpModel = ResultToMap(json, httpModel);
-                }else {
-                    httpModel.setCode(HttpResponseModel.RESPONSE_SERVER_ERROR);
-                    httpModel.setMsg(HttpResponseModel.RESPONSE_SERVER_ERROR_MSG);
-                    httpModel.setSubCode(model.getErrorCode());
-                    httpModel.setSubMsg(model.getResultMsg());
+
+                try {
+                    if (model.getErrorCode().equals(MethodConfig.HTTP_SUCCESS)){
+                        httpModel.setCode(HttpResponseModel.RESPONSE_SUCCESS);
+                        httpModel.setMsg(json);
+                        httpModel = ResultToMap(json, httpModel);
+                    }else {
+                        httpModel.setCode(HttpResponseModel.RESPONSE_SERVER_ERROR);
+                        httpModel.setMsg(HttpResponseModel.RESPONSE_SERVER_ERROR_MSG);
+                        httpModel.setSubCode(model.getErrorCode());
+                        httpModel.setSubMsg(model.getResultMsg());
+                    }
+                } catch (Exception e) {
+                    httpModel.setCode(HttpResponseModel.RESPONSE_SDK_ERROR);
+                    httpModel.setMsg(HttpResponseModel.RESPONSE_SDK_ERROR_MSG);
+                    httpModel.setSubCode(HttpResponseModel.RESPONSE_SDK_ERROR_MSG);
+                    httpModel.setSubMsg(e.getMessage()+";json-->"+json);
                 }
+
                 callBack.callBack(new Gson().toJson(httpModel));
             }
 
