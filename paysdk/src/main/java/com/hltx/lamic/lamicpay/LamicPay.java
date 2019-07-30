@@ -135,7 +135,7 @@ public class LamicPay {
                 HttpModel httpModel = new HttpModel();
 
                 try {
-                    if (model.getErrorCode().equals(MethodConfig.HTTP_SUCCESS)){
+                    if (model.isResultTrue()){
                         httpModel.setCode(HttpResponseModel.RESPONSE_SUCCESS);
                         httpModel.setMsg(json);
                         httpModel = ResultToMap(json, httpModel);
