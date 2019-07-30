@@ -52,7 +52,7 @@ public class LamicPay {
     /**
      * 是否是测试环境地址
      */
-    private static boolean          isDebuggle          = true;
+    private static boolean          isDebuggle          = false;
     /**
      * 默认超时时间 毫秒
      */
