@@ -15,6 +15,6 @@ public class MyApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        LamicPay.getInstance().init(this, "22222222222");
+        LamicPay.getInstance().setIsDebuggle(false).init(this, "22222222222");
     }
 }

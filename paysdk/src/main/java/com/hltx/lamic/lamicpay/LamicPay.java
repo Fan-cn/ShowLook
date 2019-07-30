@@ -111,15 +111,6 @@ public class LamicPay {
     }
 
     /**
-     * 设置运行的环境
-     * @param isDebuggle 默认测试环境
-     */
-    public static LamicPay setIsDebuggle(boolean isDebuggle) {
-        LamicPay.isDebuggle = isDebuggle;
-        return instance;
-    }
-
-    /**
      * 统一接口请求
      * @param method    接口{@link MethodConfig}
      * @param params    参数
@@ -269,6 +260,15 @@ public class LamicPay {
     public void cancelAllHttp(){
         checkInit();
         OkGo.getInstance().cancelAll();
+    }
+
+    /**
+     * 设置运行的环境
+     * @param debuggle 默认测试环境
+     */
+    public LamicPay setIsDebuggle(boolean debuggle) {
+        isDebuggle = debuggle;
+        return instance;
     }
 
     /**
