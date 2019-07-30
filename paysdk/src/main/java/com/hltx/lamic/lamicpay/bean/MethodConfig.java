@@ -8,13 +8,16 @@ package com.hltx.lamic.lamicpay.bean;
  * </pre>
  */
 public class MethodConfig {
-    //基地址
-    private final static String HOST                    = "gateway.lamic.cn";
     /**
-     * 测试地址
+     * 正式环境
      */
-//    private final static String HOST                    = "dev-gateway.lamic.cn";
-    public final static String BASE_URL                 = "https://" + HOST + "/";
+    private final static String HOST_GETE                    = "gateway.lamic.cn";
+    public final static String BASE_URL_GETE                 = "https://" + HOST_GETE + "/";
+    /**
+     * 测试环境
+     */
+    private final static String HOST_DEV                    = "dev-gateway.lamic.cn";
+    public final static String BASE_URL_DEV                 = "https://" + HOST_DEV + "/";
 
     /**
      * 成功状态

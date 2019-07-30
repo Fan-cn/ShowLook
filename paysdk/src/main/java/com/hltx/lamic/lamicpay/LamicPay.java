@@ -50,9 +50,13 @@ public class LamicPay {
      */
     public static boolean           isLoggable          = true;
     /**
+     * 是否是测试环境地址
+     */
+    private static boolean          isDebuggle          = true;
+    /**
      * 默认超时时间 毫秒
      */
-    public static long              DEF_MILLISECONDS    = 15000;
+    private static long             DEF_MILLISECONDS    = 15000;
     /**
      * 莱米UID
      */
@@ -106,6 +110,15 @@ public class LamicPay {
     }
 
     /**
+     * 设置运行的环境
+     * @param isDebuggle 默认测试环境
+     */
+    public static LamicPay setIsDebuggle(boolean isDebuggle) {
+        LamicPay.isDebuggle = isDebuggle;
+        return instance;
+    }
+
+    /**
      * 统一接口请求
      * @param method    接口{@link MethodConfig}
      * @param params    参数
@@ -119,7 +132,9 @@ public class LamicPay {
 
         ApiHttp apiHttp = new ApiHttp();
         apiHttp.putParams(SignUtils.makeParamMap(params));
-        String url = MethodConfig.BASE_URL + method;
+
+        String url = getHost() + method;
+
         apiHttp.post(url, new ApiCallback() {
             @Override
             public void onSuccess(Object resultData) {
@@ -190,7 +205,7 @@ public class LamicPay {
         ApiHttp apiHttp = new ApiHttp();
         String encrypt = DesUtil.encrypt(UID);
         apiHttp.put("uid", encrypt);
-        String url = MethodConfig.BASE_URL + MethodConfig.SDK_GET_CRT;
+        String url = getHost() + MethodConfig.SDK_GET_CRT;
         apiHttp.post(url, new ApiCallback() {
             @Override
             public void onSuccess(Object resultData) {
@@ -281,4 +296,11 @@ public class LamicPay {
         HttpUtils.checkNotNull(UID,"请在init或changeAccount接口中传入uid!");
     }
 
+    /**
+     * 获取地址
+     * @return 环境
+     */
+    private String getHost(){
+        return isDebuggle ? MethodConfig.BASE_URL_DEV : MethodConfig.BASE_URL_GETE;
+    }
 }
