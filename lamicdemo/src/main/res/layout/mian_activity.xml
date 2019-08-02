@@ -46,11 +46,20 @@
         android:text="会员录入"
         android:onClick="memberAdd"
         />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="test"
         android:onClick="test"
+        />
+    <Button
+        android:id="@+id/network"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="网络测试"
+        android:onClick="network"
         />
     <TextView
         android:id="@+id/text"
@@ -59,4 +68,5 @@
         android:padding="10dp"
         android:text="返回数据"
         />
+
 </LinearLayout>

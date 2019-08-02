@@ -2,6 +2,7 @@ package com.hltx.lamic.lamicpaysdk;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -170,4 +171,18 @@ public class MainActivity extends AppCompatActivity {
         }.getType());
         return map;
     }
+
+//    public void network(View view) {
+//        NetCheckUtil.isNetWorkAvailableOfGet(new Comparable<Boolean>() {
+//            @Override
+//            public int compareTo(@NonNull Boolean available) {
+//                if (available){
+//                    Log.i("------", "网络连接可用");
+//                }else {
+//                    Log.i("------", "网络连接失败");
+//                }
+//                return 0;
+//            }
+//        });
+//    }
 }

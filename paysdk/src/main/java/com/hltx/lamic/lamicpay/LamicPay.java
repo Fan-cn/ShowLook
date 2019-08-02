@@ -8,12 +8,17 @@ import com.hltx.lamic.lamicpay.bean.BaseModel;
 import com.hltx.lamic.lamicpay.bean.CrtModel;
 import com.hltx.lamic.lamicpay.bean.HttpModel;
 import com.hltx.lamic.lamicpay.bean.HttpResponseModel;
+import com.hltx.lamic.lamicpay.bean.PaySuccessModel;
+import com.hltx.lamic.lamicpay.bean.TOLOrder;
+import com.hltx.lamic.lamicpay.db.DBManager;
+import com.hltx.lamic.lamicpay.db.TimerManager;
 import com.hltx.lamic.lamicpay.http.ApiCallback;
 import com.hltx.lamic.lamicpay.http.ApiHttp;
 import com.hltx.lamic.lamicpay.http.LamicApiCallBack;
 import com.hltx.lamic.lamicpay.utils.Debug;
 import com.hltx.lamic.lamicpay.utils.DesUtil;
 import com.hltx.lamic.lamicpay.utils.DesUtils4CSharp;
+import com.hltx.lamic.lamicpay.utils.NetCheckUtil;
 import com.hltx.lamic.lamicpay.utils.SignUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.CookieJarImpl;
@@ -27,6 +32,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -52,11 +58,15 @@ public class LamicPay {
     /**
      * 是否是测试环境地址
      */
-    private static boolean          isDebuggle          = false;
+    public static boolean          isDebuggle          = false;
     /**
      * 默认超时时间 毫秒
      */
     private static long             DEF_MILLISECONDS    = 15000;
+    /**
+     * 数据同步时间间隔
+     */
+    private static long             DEF_DELAY_SECONDS   = 1 * 60 * 1000;
     /**
      * 莱米UID
      */
@@ -107,7 +117,16 @@ public class LamicPay {
         initHttp();
         getCrt();
 
+        DBManager.initHelper(application);
+        initTimer();
+
         return instance;
+    }
+
+    private void initTimer(){
+        Timer timer = new Timer();
+        TimerManager manager = new TimerManager();
+        timer.schedule(manager, DEF_DELAY_SECONDS, DEF_DELAY_SECONDS);
     }
 
     /**
@@ -116,17 +135,46 @@ public class LamicPay {
      * @param params    参数
      * @param callBack  回调
      */
-    public void invoke(String method, Map<String, Object> params, final LamicApiCallBack callBack){
+    public void invoke(final String method, final Map<String, Object> params, final LamicApiCallBack callBack){
 
         checkInit();
         HttpUtils.checkNotNull(method, "请传入method参数(如MethodConfig.TRADE_CREATE)");
         HttpUtils.checkNotNull(params, "请传入参数");
 
+        if (method.equals(MethodConfig.TRADE_CREATE)){
+            NetCheckUtil.isNetWorkAvailableOfGet(new Comparable<Boolean>() {
+                @Override
+                public int compareTo(Boolean available) {
+                    if (available){
+                        request(method, params, callBack);
+                    }else {
+                        DBManager.getHelper().save(new TOLOrder(
+                                valueOf(params.get("out_trade_no")), valueOf(params.get("goods_detail")),
+                                valueOf(params.get("total_amount")), valueOf(params.get("auth_code")),
+                                valueOf(params.get("pay_type")),     valueOf(params.get("discountable_amount")),
+                                valueOf(params.get("vip_card_no")),  valueOf(params.get("terminalName")),
+                                valueOf(params.get("terminalNo")),   valueOf(params.get("outcashier")),
+                                valueOf(params.get("make_invoice"))));
+                        HttpModel httpModel = new HttpModel();
+                        httpModel.setCode(HttpResponseModel.RESPONSE_SUCCESS);
+                        String json = new Gson().toJson(new PaySuccessModel());
+                        httpModel.setMsg(json);
+                        httpModel = ResultToMap(json, httpModel);
+                        if(callBack != null)
+                            callBack.callBack(new Gson().toJson(httpModel));
+                    }
+                    return 0;
+                }
+            });
+        }else {
+            request(method, params, callBack);
+        }
+    }
+
+    private void request(String method, Map<String, Object> params, final LamicApiCallBack callBack) {
         ApiHttp apiHttp = new ApiHttp();
         apiHttp.putParams(SignUtils.makeParamMap(params));
-
         String url = getHost() + method;
-
         apiHttp.post(url, new ApiCallback() {
             @Override
             public void onSuccess(Object resultData) {
@@ -152,7 +200,8 @@ public class LamicPay {
                     httpModel.setSubMsg(json);
                 }
 
-                callBack.callBack(new Gson().toJson(httpModel));
+                if(callBack != null)
+                    callBack.callBack(new Gson().toJson(httpModel));
             }
 
             @Override
@@ -160,7 +209,8 @@ public class LamicPay {
                 HttpModel model = new HttpModel(
                         HttpResponseModel.RESPONSE_SDK_ERROR, HttpResponseModel.RESPONSE_SDK_ERROR_MSG,
                         HttpResponseModel.SDK_WEB_EXCEPTION, HttpResponseModel.SDK_WEB_EXCEPTION_MSG);
-                callBack.callBack(new Gson().toJson(model));
+                if(callBack != null)
+                    callBack.callBack(new Gson().toJson(model));
             }
         });
     }
@@ -281,11 +331,20 @@ public class LamicPay {
     }
 
     /**
-     * 连接超时时间设置
+     * 网络连接超时时间设置
      * @param milliseconds 毫秒 {@link LamicPay#DEF_MILLISECONDS 默认值}
      */
     public LamicPay setConnTimeout(long milliseconds){
         initHttp(milliseconds);
+        return instance;
+    }
+
+    /**
+     * 数据同步时间间隔设置
+     * @param defDelaySeconds 毫秒{@link LamicPay#DEF_DELAY_SECONDS 默认值}
+     */
+    public LamicPay setDefDelaySeconds(long defDelaySeconds) {
+        DEF_DELAY_SECONDS = defDelaySeconds;
         return instance;
     }
 
@@ -303,5 +362,9 @@ public class LamicPay {
      */
     private String getHost(){
         return isDebuggle ? MethodConfig.BASE_URL_DEV : MethodConfig.BASE_URL_GETE;
+    }
+
+    private String valueOf(Object obj){
+        return String.valueOf(obj);
     }
 }

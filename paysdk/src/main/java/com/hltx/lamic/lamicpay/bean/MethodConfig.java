@@ -11,8 +11,8 @@ public class MethodConfig {
     /**
      * 正式环境
      */
-//    private final static String HOST_GETE                    = "gateway.lamic.cn";
-    private final static String HOST_GETE                    = "172.18.106.206";
+    private final static String HOST_GETE                    = "gateway.lamic.cn";
+//    private final static String HOST_GETE                    = "172.18.106.206";
     public final static String BASE_URL_GETE                 = "http://" + HOST_GETE + "/";
     /**
      * 测试环境
