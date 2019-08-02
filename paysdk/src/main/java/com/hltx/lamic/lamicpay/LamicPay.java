@@ -58,7 +58,11 @@ public class LamicPay {
     /**
      * 是否是测试环境地址
      */
-    public static boolean          isDebuggle          = false;
+    public static boolean          isDebuggle           = false;
+    /**
+     * 是否使用离线功能
+     */
+    public static boolean          isUseOutLineOrder    = false;
     /**
      * 默认超时时间 毫秒
      */
@@ -67,6 +71,8 @@ public class LamicPay {
      * 数据同步时间间隔
      */
     private static long             DEF_DELAY_SECONDS   = 1 * 60 * 1000;
+
+
     /**
      * 莱米UID
      */
@@ -79,6 +85,8 @@ public class LamicPay {
 //    public static String            UID = "22222222222";
 //    public static String            PRIVATE_KEY = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAM3NjLXb5w5RBRXau1Ud/ORcGnyOk3vGoL6FBQOfdKlD1JFftabexrJg7E/jXkR3KfGDnAtzoKct/ckpvxiVboK7he2Gxn+DavBlREJinSVUCda60sph2w889b5ns8hudqIsrb2/fxdkPxEAboE7YSBok/QpwtndOpkippdMLccnAgMBAAECgYAQ4cupH2DUy9Ce+lJjqRIVqXiCvy9Z9/E3r7G5mlr3h5joU/GSvrON7mV0KDKTazMFnMYwKkwDasJmvgXu/lMSQKQucSyzm7bMAlgEAX4D8eAeNJIt9/v1sZ5Bg3/0jZNuk/PHiFxjOD+0yBrXtCwLmUzpJixagQmvrPSPN4J4AQJBAOt6mHCuhIZK+4mhQnKuZv8UgQErIFQGpP2hzjI6ewZreL1uSUVmJVp2c0g2MQrXFPCc92wTkr4x0laPVYUIJk0CQQDfvOZa5XeKV/g7ce98Bt2TPbZDipdIyRjWwkPvTwOehT/wqNAW3PcmmMHrSRWR4m/JFVjI2emH+kQx/AK6HUVDAkBl43z0PL8A8I7YJVuADbBpLLEJFWT+loVrbUiv+RfkVjo/FOpFSgZdlyUYmMIto5Te67wvGmUDQMF3TLu/PSB9AkBLxnpuBpF59VlJKMlnRBv/JkN4lJOwPwt+kMTZY/Vh1tdU9pejZqr+E3Z57YK0qfAaNnSfcc46E3TNSQDTb95pAkEAsReDNCCcsDW5VbHCmUpyta86+LDilbuDYmblx/gSqfsuGEDmqo7eWk+idrPt980wvhs88XGSBV1/hJ0aPRo38g==";
 
+    private static String           ORIGIN_KEY = "E2D109F7BFF127A0697DCCC9F98C995E60A76180D0C7C577CBB5DEE4FC05E0E94491F61AF4273E2437EAD0057E8F0B85D88AD5AD5CC81FE52AA9091D432591A9E1509075C1E56F490615E95EDC180EAB8B508142864C9C02B0D7E68F851A792AB7E2D59D4932A78C5F8AA09E8F58EDBFC8C708832A467FE81FB6F899F42D24C8F727DBF6CF134D60B7CADA040B93C155014C520C444361E3C0065C6EC1C358F299BB205C83FA01984955B74D5469EE5A880B45F811413DCF8D6690E9CDA96E38E026DF784A1C03D442AC0F8533C37B5E8F1C8160307EF5D7157FC53A6420355E3E1B63BE65CD068203EFBD133ACCAEB563CC6E01984E6940FEDA01792D46759CFAE1C19939AB55FFFA58BD518D1E6BB865B9E7B73AE3B55A567D8C807316403289734BAE08C5B7A3243F22E34C26CF8ADD213EB7978F57D411C86213F9A846C7A75203AE5D05BEA15DE87DF05AB2838533932FAC4B6133ADFBB9BF0E89C3D58690A6259ABE7930A95EB877626AAC01AE2400C02D7EFA42D85FE8B65A5B6798D72965D1C946C66BBE8EFB971E4A53DC6EF0243727A5ABBBCF68D26A6E1CFDEEC13D802C4B2229C669713DA1B17A5F10D97988B00CC51AA8A3F2273AA4BD0C57372BD32E8BD8EAFC24F267ABC0AB2B3CB779A47E25BCD70755F27880FC5C7FEB3E58B3FBF12CBE2D5E556544BEE0DFEA2CB3CC450C7705086097DE3E6F52236C091673A2245480517B9935F8FB5768F8CDE656A41C47C4F2FBC52A45F21A743C45599AC26D398174437D0465909E18C78B8DBBFCBD500ADABF4A51EBB053E627BDF65476257C39FB206F894E5CE5F38BBAF615EF976EF3CC656B187B5DD1E32AAD535F8D13353D9E70A1EBB220476FF6B445F0225798E13CFEEFE5B5A95016602F9DE9464675A49983F8F0E412CFCE3D83A16E5751BA85FA4667816D02822EA37F09DAAD6CA5DDAA3E6D790BC6ED1C88282FADA0F4605C913D534F3431CB34D5213552AFE93107C24A266B80AB71BDC20FF100914989A6FD0986F5F02AB9D8019080E7C66405AC7F6DE8D5F71E2B0363EFBECBB416DD27EA0F81F21F9AE81F43DF25F0092A0736115749D31ED1D228B85BC1BF2B28D017D702FDAB5C4FD0036EB3A3B3512381659DFEC30E3BB3F110D2E5A34A159AC46FE06C1C9D9527022297FCBBA0E35FE5A757624C8C30C7B28197C92EA5F9282F81D41B";
+
     private static LamicPay         instance;
 
     /**
@@ -87,8 +95,11 @@ public class LamicPay {
     private Application             mApp;
 
 
-    public LamicPay(){
+    static {
+        PRIVATE_KEY = DesUtils4CSharp.decrypt(ORIGIN_KEY);
+    }
 
+    public LamicPay(){
     }
 
     public static LamicPay getInstance() {
@@ -117,8 +128,10 @@ public class LamicPay {
         initHttp();
         getCrt();
 
-        DBManager.initHelper(application);
-        initTimer();
+        if (isUseOutLineOrder){
+            DBManager.initHelper(application);
+            initTimer();
+        }
 
         return instance;
     }
@@ -141,31 +154,35 @@ public class LamicPay {
         HttpUtils.checkNotNull(method, "请传入method参数(如MethodConfig.TRADE_CREATE)");
         HttpUtils.checkNotNull(params, "请传入参数");
 
-        if (method.equals(MethodConfig.TRADE_CREATE)){
-            NetCheckUtil.isNetWorkAvailableOfGet(new Comparable<Boolean>() {
-                @Override
-                public int compareTo(Boolean available) {
-                    if (available){
-                        request(method, params, callBack);
-                    }else {
-                        DBManager.getHelper().save(new TOLOrder(
-                                valueOf(params.get("out_trade_no")), valueOf(params.get("goods_detail")),
-                                valueOf(params.get("total_amount")), valueOf(params.get("auth_code")),
-                                valueOf(params.get("pay_type")),     valueOf(params.get("discountable_amount")),
-                                valueOf(params.get("vip_card_no")),  valueOf(params.get("terminalName")),
-                                valueOf(params.get("terminalNo")),   valueOf(params.get("outcashier")),
-                                valueOf(params.get("make_invoice"))));
-                        HttpModel httpModel = new HttpModel();
-                        httpModel.setCode(HttpResponseModel.RESPONSE_SUCCESS);
-                        String json = new Gson().toJson(new PaySuccessModel());
-                        httpModel.setMsg(json);
-                        httpModel = ResultToMap(json, httpModel);
-                        if(callBack != null)
-                            callBack.callBack(new Gson().toJson(httpModel));
+        if (isUseOutLineOrder){
+            if (method.equals(MethodConfig.TRADE_CREATE)){
+                NetCheckUtil.isNetWorkAvailableOfGet(new Comparable<Boolean>() {
+                    @Override
+                    public int compareTo(Boolean available) {
+                        if (available){
+                            request(method, params, callBack);
+                        }else {
+                            DBManager.getHelper().save(new TOLOrder(
+                                    valueOf(params.get("out_trade_no")), valueOf(params.get("goods_detail")),
+                                    valueOf(params.get("total_amount")), valueOf(params.get("auth_code")),
+                                    valueOf(params.get("pay_type")),     valueOf(params.get("discountable_amount")),
+                                    valueOf(params.get("vip_card_no")),  valueOf(params.get("terminalName")),
+                                    valueOf(params.get("terminalNo")),   valueOf(params.get("outcashier")),
+                                    valueOf(params.get("make_invoice"))));
+                            HttpModel httpModel = new HttpModel();
+                            httpModel.setCode(HttpResponseModel.RESPONSE_SUCCESS);
+                            String json = new Gson().toJson(new PaySuccessModel());
+                            httpModel.setMsg(json);
+                            httpModel = ResultToMap(json, httpModel);
+                            if(callBack != null)
+                                callBack.callBack(new Gson().toJson(httpModel));
+                        }
+                        return 0;
                     }
-                    return 0;
-                }
-            });
+                });
+            }else {
+                request(method, params, callBack);
+            }
         }else {
             request(method, params, callBack);
         }
@@ -331,6 +348,15 @@ public class LamicPay {
     }
 
     /**
+     * 是否使用离线现金支付功能
+     * @param isUseOutLine  boolean {@link LamicPay#isUseOutLineOrder 默认值}
+     */
+    public LamicPay setIsUseOutLineOrder(boolean isUseOutLine){
+        isUseOutLineOrder = isUseOutLine;
+        return instance;
+    }
+
+    /**
      * 网络连接超时时间设置
      * @param milliseconds 毫秒 {@link LamicPay#DEF_MILLISECONDS 默认值}
      */
@@ -342,6 +368,7 @@ public class LamicPay {
     /**
      * 数据同步时间间隔设置
      * @param defDelaySeconds 毫秒{@link LamicPay#DEF_DELAY_SECONDS 默认值}
+     *                          必须当{@link LamicPay#isUseOutLineOrder}为true的情况下，才有效
      */
     public LamicPay setDefDelaySeconds(long defDelaySeconds) {
         DEF_DELAY_SECONDS = defDelaySeconds;

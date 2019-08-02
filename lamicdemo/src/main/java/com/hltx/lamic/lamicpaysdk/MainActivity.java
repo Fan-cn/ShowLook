@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
         return map;
     }
 
-//    public void network(View view) {
+    public void network(View view) {
 //        NetCheckUtil.isNetWorkAvailableOfGet(new Comparable<Boolean>() {
 //            @Override
 //            public int compareTo(@NonNull Boolean available) {
@@ -184,5 +184,5 @@ public class MainActivity extends AppCompatActivity {
 //                return 0;
 //            }
 //        });
-//    }
+    }
 }
